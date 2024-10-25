@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Prediction - Sign Up & Login</title>
+    <style>
+        /* Reset and Base Styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #4a90e2, #1450a8);
+            color: #333;
+        }
+        /* Container Styling */
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 25px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: 0.3s;
+        }
+        .container:hover {
+            box-shadow: 0px 12px 35px rgba(0, 0, 0, 0.3);
+        }
+        .container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        /* Form Group Styling */
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+        .form-group label {
+            font-size: 14px;
+            color: #333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+            transition: 0.3s;
+        }
+        .form-group input:focus {
+            border-color: #4a90e2;
+            outline: none;
+            box-shadow: 0px 0px 8px rgba(74, 144, 226, 0.3);
+        }
+        /* Button and Toggle Link Styling */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #4a90e2;
+            color: #fff;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .btn:hover {
+            background: #357ab8;
+        }
+        .toggle-btn {
+            display: inline-block;
+            margin-top: 15px;
+            color: #4a90e2;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+        .toggle-btn:hover {
+            color: #357ab8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 id="form-title">Login</h2>
+    <div id="form-container">
+        <!-- Login Form -->
+        <div id="login-form" class="form">
+            <div class="form-group">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" placeholder="Enter your password" required>
+            </div>
+            <button class="btn" onclick="handleLogin()">Login</button>
+        </div>
+
+        <!-- Signup Form (Hidden by Default) -->
+        <div id="signup-form" class="form" style="display: none;">
+            <div class="form-group">
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" placeholder="Create a password" required>
+            </div>
+            <div class="form-group">
+                <label for="signup-confirm-password">Confirm Password</label>
+                <input type="password" id="signup-confirm-password" placeholder="Confirm your password" required>
+            </div>
+            <button class="btn" onclick="handleSignup()">Sign Up</button>
+        </div>
+    </div>
+    <p class="toggle-btn" onclick="toggleForm()">Don't have an account? Sign up</p>
+</div>
+
+<!-- Firebase SDK and Script Configuration -->
+<script type="module">
+    // Import Firebase app and authentication libraries
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDDq-J9eXTdchmJJWELZC0UIg6Qh9keiaU",
+        authDomain: "housepriceprediction-bc52d.firebaseapp.com",
+        projectId: "housepriceprediction-bc52d",
+        storageBucket: "housepriceprediction-bc52d.appspot.com",
+        messagingSenderId: "291701858590",
+        appId: "1:291701858590:web:2c0d4bda6abec3dbbc690f"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let isLogin = true;
+
+    // Expose functions to the global scope
+    window.toggleForm = function() {
+        isLogin = !isLogin;
+        document.getElementById("form-title").textContent = isLogin ? "Login" : "Sign Up";
+        document.getElementById("login-form").style.display = isLogin ? "block" : "none";
+        document.getElementById("signup-form").style.display = isLogin ? "none" : "block";
+        document.querySelector(".toggle-btn").textContent = isLogin ? "Don't have an account? Sign up" : "Already have an account? Login";
+    }
+
+    window.handleLogin = function() {
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                alert("Logged in successfully!");
+                window.location.href = "/main";
+            })
+            .catch((error) => {
+                alert("Error: " + error.message);
+            });
+    }
+
+    window.handleSignup = function() {
+        const email = document.getElementById("signup-email").value;
+        const password = document.getElementById("signup-password").value;
+        const confirmPassword = document.getElementById("signup-confirm-password").value;
+        
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return;
+        }
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                alert("Signed up successfully!");
+                window.location.href = "/main";
+            })
+            .catch((error) => {
+                alert("Error: " + error.message);
+            });
+    }
+</script>
+
+</body>
+</html>

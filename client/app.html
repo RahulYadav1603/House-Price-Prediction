@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bangalore Home Price Prediction</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"></script>
+	<script src="static/app.js"></script>
+    <link rel="stylesheet" href="static/app.css">
+</head>
+<body>
+<div class="img"></div>
+<form class="form" id="pricePredictionForm">
+    <h2>Area (Square Feet)</h2>
+    <input type="text" id="uiSqft" class="area" name="Squareft" value="1000">
+
+    <h2>BHK</h2>
+    <div class="switch-field">
+        <input type="radio" id="radio-bhk-1" name="uiBHK" value="1"/>
+        <label for="radio-bhk-1">1</label>
+        <input type="radio" id="radio-bhk-2" name="uiBHK" value="2" checked/>
+        <label for="radio-bhk-2">2</label>
+        <input type="radio" id="radio-bhk-3" name="uiBHK" value="3"/>
+        <label for="radio-bhk-3">3</label>
+        <input type="radio" id="radio-bhk-4" name="uiBHK" value="4"/>
+        <label for="radio-bhk-4">4</label>
+        <input type="radio" id="radio-bhk-5" name="uiBHK" value="5"/>
+        <label for="radio-bhk-5">5</label>
+    </div>
+
+    <h2>Bath</h2>
+    <div class="switch-field">
+        <input type="radio" id="radio-bath-1" name="uiBathrooms" value="1"/>
+        <label for="radio-bath-1">1</label>
+        <input type="radio" id="radio-bath-2" name="uiBathrooms" value="2" checked/>
+        <label for="radio-bath-2">2</label>
+        <input type="radio" id="radio-bath-3" name="uiBathrooms" value="3"/>
+        <label for="radio-bath-3">3</label>
+        <input type="radio" id="radio-bath-4" name="uiBathrooms" value="4"/>
+        <label for="radio-bath-4">4</label>
+        <input type="radio" id="radio-bath-5" name="uiBathrooms" value="5"/>
+        <label for="radio-bath-5">5</label>
+    </div>
+
+    <h2>Location</h2>
+    <div>
+        <select class="location" id="uiLocations">
+            <option value="" disabled selected>Choose a Location</option>
+            <option>Electronic City</option>
+            <option>Rajaji Nagar</option>
+        </select>
+    </div>
+
+    <button class="submit" onclick="onClickedEstimatePrice()" type="button">Estimate Price</button>
+    <div id="uiEstimatedPrice" class="result"><h2></h2></div>
+</form>
+
+<!-- Logout Button -->
+<button id="logoutBtn" onclick="handleLogout()" style="margin: 20px; display: none;">Logout</button>
+
+<script type="module">
+	import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDDq-J9eXTdchmJJWELZC0UIg6Qh9keiaU",
+        authDomain: "housepriceprediction-bc52d.firebaseapp.com",
+        projectId: "housepriceprediction-bc52d",
+        storageBucket: "housepriceprediction-bc52d.appspot.com",
+        messagingSenderId: "291701858590",
+        appId: "1:291701858590:web:2c0d4bda6abec3dbbc690f"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Check user state and show/hide logout button
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // User is signed in
+            document.getElementById("logoutBtn").style.display = "inline";
+        } else {
+            // No user is signed in
+            document.getElementById("logoutBtn").style.display = "none";
+        }
+    });
+
+    window.handleLogout = function() {
+        auth.signOut().then(() => {
+            alert("Logged out successfully!");
+            // Redirect to login page or update UI accordingly
+            window.location.href = "/"; // Change this to your login page
+        }).catch((error) => {
+            alert("Error logging out: " + error.message);
+        });
+    }
+</script>
+</body>
+</html>
