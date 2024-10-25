@@ -4,8 +4,8 @@ import util
 import os
 
 # Define paths for templates and static folder
-template_dir = os.path.join(os.path.dirname(__file__), '../client')
-static_dir = os.path.join(os.path.dirname(__file__), '../client/static')
+template_dir = os.path.join(os.path.dirname(__file__), './client')
+static_dir = os.path.join(os.path.dirname(__file__), './client/static')
 
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 CORS(app)  # Enable CORS for all routes
