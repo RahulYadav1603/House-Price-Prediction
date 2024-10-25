@@ -1,2 +1,4 @@
-Flask==1.0.2
-scikit-learn==0.20.3
+fastapi==0.100.0       # Main framework for API handling and serving HTML
+uvicorn==0.22.0        # ASGI server for running FastAPI apps
+jinja2==3.1.2          # Template engine for rendering HTML templates in FastAPI
+scikit-learn==1.2.2    # Model-related functions
