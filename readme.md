@@ -10,6 +10,14 @@ This data science project series walks through step by step process of how to bu
 6. Python flask for http server
 7. HTML/CSS/Javascript for UI
 
+How to run ?
+Download all required modules such as numpy, sci-kit learn 
+pip install numpy
+pip install scikit-learn
+
+After download go to server 
+python server.py
+
 
 
 
