@@ -1,51 +1,43 @@
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from flask import Flask, request, jsonify, render_template
 import util
 
-app = FastAPI()
+app = Flask(__name__, template_folder="templates", static_folder="static")
 
-# Mount static files directory for CSS, JS, images, etc.
-app.mount("/static", StaticFiles(directory="client/static"), name="static")
+# Load artifacts when the app starts
+util.load_saved_artifacts()
 
-# Set up Jinja2Templates for HTML templates
-templates = Jinja2Templates(directory="client")
+@app.route("/main")
+def main():
+    return render_template("app.html")  # Ensure 'app.html' is in the 'templates' folder
 
-@app.get("/main", response_class=HTMLResponse)
-async def main(request: Request):
-    return templates.TemplateResponse("app.html", {"request": request})
+@app.route("/")
+def home():
+    return render_template("sign_up.html")  # Ensure 'sign_up.html' is in the 'templates' folder
 
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    return templates.TemplateResponse("sign_up.html", {"request": request})
-
-@app.get("/get_location_names")
-async def get_location_names():
+@app.route("/get_location_names")
+def get_location_names():
     try:
         locations = util.get_location_names()
-        return JSONResponse(content={'locations': locations})
+        return jsonify({'locations': locations})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return jsonify({"error": str(e)}), 500
 
-@app.post("/predict_home_price")
-async def predict_home_price(request: Request):
+@app.route("/predict_home_price", methods=["POST"])
+def predict_home_price():
     try:
-        data = await request.json()
+        data = request.get_json()  # Use JSON data from the request
         total_sqft = float(data.get('total_sqft', 0))
         location = data.get('location', '')
         bhk = int(data.get('bhk', 0))
         bath = int(data.get('bath', 0))
 
         if not location or total_sqft <= 0 or bhk <= 0 or bath <= 0:
-            raise HTTPException(status_code=400, detail="Invalid input values.")
+            return jsonify({"error": "Invalid input values"}), 400
 
         estimated_price = util.get_estimated_price(location, total_sqft, bhk, bath)
-        return JSONResponse(content={'estimated_price': estimated_price})
+        return jsonify({'estimated_price': estimated_price})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return jsonify({"error": str(e)}), 500
 
-# Call load_saved_artifacts when the app starts
-@app.on_event("startup")
-async def startup_event():
-    util.load_saved_artifacts()
+if __name__ == "__main__":
+    app.run(debug=True) 
