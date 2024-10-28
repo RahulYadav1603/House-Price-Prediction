@@ -12,7 +12,13 @@ def main():
 
 @app.route("/")
 def home():
+    return render_template("landing_page.html")  # Ensure 'sign_up.html' is in the 'templates' folder
+
+@app.route("/sign_up")
+def sign_up():
     return render_template("sign_up.html")  # Ensure 'sign_up.html' is in the 'templates' folder
+
+
 
 @app.route("/get_location_names")
 def get_location_names():
