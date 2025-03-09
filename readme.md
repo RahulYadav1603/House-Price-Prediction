@@ -15,8 +15,9 @@ Download all required modules such as numpy, sci-kit learn
 pip install numpy
 pip install scikit-learn
 
-After download go to server 
-python server.py
+After download go to server directory 
+and run this command
+**__python server.py__**
 
 
 
