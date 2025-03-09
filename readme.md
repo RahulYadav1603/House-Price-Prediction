@@ -17,7 +17,7 @@ pip install scikit-learn
 
 After download go to server directory 
 and run this command
-**__python server.py__**
+__**python server.py**__
 
 
 
